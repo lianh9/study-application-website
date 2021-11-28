@@ -1,0 +1,10 @@
+site_name: Study Hub
+site_url: https://example.com/
+nav:
+    - Home: index.md
+    - About: about.md
+    - Function: function.md
+   
+theme: readthedocs
+
+

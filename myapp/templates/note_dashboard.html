@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<link href = "{{url_for('static',filename='css/form_style.css')}}" rel="stylesheet">
+<br/>  
+<div class="container">
+</br>
+    <h4> Notes Dashbord</h4>
+</br>
+{% if note_id == current_user.id %}
+
+    {% for note in notes %}
+    <div class = 'shadow p-3 mb-5 bg-body rounded'>
+    {{note.title}}
+</br>
+    {% filter markdown %}
+    {{note.text}}
+</br>
+    {% endfilter %}
+    </div>
+</br>
+</p>
+    
+
+    {% endfor %}
+    {% else %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        No Notes exist! Please go add notes page to add your first notes! 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+</div>
+
+{% endif %}
+{% endblock %}

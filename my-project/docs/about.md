@@ -1,25 +1,12 @@
-
-from os import error
-from sqlalchemy.orm import session
-from werkzeug.security import check_password_hash, generate_password_hash
-from myapp import myobj
-from myapp import db
-from myapp.loginforms import LoginForm
-from myapp.deleteforms import DeleteForm
-from myapp.noteforms import NoteForm
-from myapp.models import User, Notes
-from myapp.registerforms import RegisterForm
-from flask import render_template, escape, flash, redirect,request
-from markdown import markdown
-from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
-
-
-
+## Code in myapp/routes.py
+```python
 @myobj.route("/")
 def home():
-    """Return home page 
+    """
+        Return home page 
     """
     return render_template("home.html")
+
 
 @myobj.route("/home")
 def study():
@@ -156,3 +143,136 @@ def notes_dashboard():
         note_id = note.user_id
     return render_template('note_dashboard.html',notes=notes,note_id=note_id)
 
+```
+## Code in myapp/deleteforms.py
+```python
+class DeleteForm(FlaskForm):
+    '''
+    Create form filed for the purpose of delete account information.
+        Parameters:
+            FlaskForm : A form parameter from flask_wtf
+    '''
+    email = StringField('Email', validators=[DataRequired()])
+    password_hash = PasswordField('Password',validators=[DataRequired()])
+    delete = SubmitField('Submit')
+
+```
+## code in myapp/loginforms.py
+```python
+class LoginForm(FlaskForm):
+    '''
+    Create form filed for the purpose of login account information.
+        Parameters:
+            FlaskForm : A form parameter from flask_wtf
+    '''
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    password_hash = PasswordField('Password',validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Sign in')
+
+```
+## Code in mapp/models.py
+```python
+
+class User(db.Model, UserMixin):
+    '''
+    Create user database for the purpose of storing user information.
+        Parameters:
+            db.Model :
+            UserMixin: 
+    '''
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    email = db.Column(db.String(128), index=True, unique=True)
+    password_hash =db.Column(db.String(128))
+    notes = db.relationship('Notes',backref='user',lazy = True)
+ #Returns a string as a representation of the object.
+    def __repr__(self):
+        return f'<{self.username}  {self.email}  {self.password_hash}>'
+   
+@login_manager.user_loader
+def load_user(id):
+    '''
+    load user's id
+        Parameters:
+                id     
+        Returns:
+            int (id) : user id
+    '''
+    return User.query.get(int(id))
+
+class Notes(db.Model):
+    '''
+    Create database to store notes information.
+        Parameters:
+            db.Model 
+        Returns:
+            return html pages
+    '''
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(128))
+    text = db.Column(db.Text)
+    date_added = db.Column(db.DateTime,default = datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable = False)
+
+ #Returns a string as a representation of the object.
+    def __repr__(self):
+        return f'<{self.title}  {self.text} >'
+    
+
+```
+## Code in myapp/noteforms.py
+```python
+class NoteForm(FlaskForm):
+    '''
+    Create form filed string and textarea for the purpose of entering notes and the title.
+        Parameters:
+            FlaskForm : A form parameter from flask_wtf
+    '''
+    title = StringField('Title', validators=[DataRequired()])
+    text = TextAreaField('Text', validators=[DataRequired()],widget=TextArea())
+    submit = SubmitField('submit')
+
+```
+## Code in myapp/registerforms.py
+```python
+
+class RegisterForm(FlaskForm):
+    '''
+    Create form filed for the purpose of signing up account information.
+        Parameters:
+            FlaskForm : A form parameter from flask_wtf
+    '''
+    username = StringField('Username', validators=[DataRequired()])
+    password_hash = PasswordField('Password',validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    register = SubmitField('Sign up')
+
+```
+## Code for myapp/init.py
+```python
+# create Flask class object named myobj
+myobj = Flask(__name__,static_url_path="", static_folder="static")
+ckeditor =  CKEditor(myobj)
+Markdown(myobj, extensions=['fenced_code'],auto_escape=True)
+#PageDown(myobj)
+# Flask login manager
+login_manager = LoginManager()
+login_manager.init_app(myobj)
+login_manager.login_view = 'login'
+
+
+myobj.config.from_mapping(
+    SECRET_KEY = 'you-will-know',
+    # location of sqlite database
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db'),
+    SQLALCHEMY_TRACK_MODIFICATIONS = False,
+    
+)
+
+db = SQLAlchemy(myobj)
+migrate = Migrate(myobj,db)
+
+
+```
