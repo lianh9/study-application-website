@@ -7,13 +7,14 @@ from myapp import db
 from myapp.loginforms import LoginForm
 from myapp.deleteforms import DeleteForm
 from myapp.noteforms import NoteForm
-from myapp.models import User, Notes
+from myapp.models import User, Notes, Todo, Tracker
 from myapp.registerforms import RegisterForm
 from flask import render_template, escape, flash, redirect,request
 from markdown import markdown
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
-
-
+from myapp.todoforms import ToDo
+from myapp.workhrs import Track
+from datetime import datetime
 
 @myobj.route("/")
 def home():
@@ -156,3 +157,49 @@ def notes_dashboard():
         note_id = note.user_id
     return render_template('note_dashboard.html',notes=notes,note_id=note_id)
 
+@myobj.route("/todo", methods = ['GET', 'POST'])
+@login_required
+def toDo():
+    '''
+        Allows the user to create a Todo list that lets them type what is due,
+        when it is due, and how important that assignment is (priority)
+            Returns:
+                String
+    '''
+    form = ToDo()
+
+    if form.validate_on_submit():
+        flash(f' {form.goal.data} added')
+        goalname = form.goal.data
+        prior = form.prio.data
+        dueDate = form.due_date.data
+        doList = Todo(goal = goalname, prio = prior,due_date = dueDate)
+        db.session.add(doList)
+        db.session.commit()
+        return redirect ("todo")
+
+    orderList = Todo.query.order_by(Todo.prio).all()
+    return render_template('todo.html', form = form, orderList = orderList)
+@myobj.route("/track",methods = ['GET', 'POST'])
+@login_required
+def trackhours():
+    '''
+        Allows the user to input when they worked and how many hours
+        they worked. This function will create a list that will store 
+        the data, so they can track how many hours they worked that day.
+            Returns:
+                Date
+                Integer
+    '''
+    form = Track()
+
+    if form.validate_on_submit():
+        flash(f' data saved')
+        hoursworked = form.hours.data
+        dateworked = form.datew.data
+        organize = Tracker(hours = hoursworked,datew = dateworked)
+        db.session.add(organize)
+        db.session.commit()
+    current = datetime.now().strftime("%m/%d/%Y")
+    order = Tracker.query.all()
+    return render_template('tracker.html',current = current, form = form, order = order )

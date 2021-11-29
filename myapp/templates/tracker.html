@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1> Track Hours </h1>
+
+<p>
+        Please choose a date and record how many hours did you worked
+
+</p>
+
+
+<form action = "" method = "POST" novalidate>
+	{{ form.hidden_tag() }}
+	<p>
+		{{form.hours.label}}
+		{{form.hours(size=32)}}
+	</p>
+	<p>
+		{{form.datew.label}}
+		{{form.datew(size=32)}}											        </p>
+	 <p>
+	                 {{form.addH()}}
+	</p>
+
+</form>
+{% if order %}
+        <ul>
+		                {% for organize in order %}
+				                <li> At {{organize.datew.strftime("%m/%d/%Y")}} you worked {{organize.hours}} hours </li>
+						                {% endfor %}
+								        <ul>
+										        {% endif %}
+
+{% endblock %}

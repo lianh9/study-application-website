@@ -51,4 +51,33 @@ class Notes(db.Model):
         return f'<{self.title}  {self.text} >'
     
 
-     
+class Todo(db.Model):
+    '''
+    Creates a database to store the name and date
+    for the todo list
+        Parameters:
+            db.Model
+        Returns:
+            String
+    '''
+    id = db.Column(db.Integer, primary_key = True)
+    goal = db.Column(db.String(80))
+    prio = db.Column(db.Integer, index = True)
+    due_date = db.Column(db.DateTime)
+
+    def __ref(self):
+        return f"Todo('{self.goal}', {self.prio})"
+
+class Tracker(db.Model):
+    '''
+    Creates a database to store the number and date
+    to track how many hours they worked
+        Parameters:
+            db.model
+        Returns:
+            Date
+            integer
+    '''
+    id = db.Column(db.Integer, primary_key = True)
+    hours = db.Column(db.Integer)
+    datew = db.Column(db.DateTime)
