@@ -143,6 +143,84 @@ def notes_dashboard():
         note_id = note.user_id
     return render_template('note_dashboard.html',notes=notes,note_id=note_id)
 
+
+@myobj.route("/track",methods = ['GET', 'POST'])
+@login_required
+def trackhours():
+    '''
+        Allows the user to input when they worked and how many hours
+        they worked. This function will create a list that will store
+        the data, so they can track how many hours they worked that day.
+            Returns:
+                Date
+                Integer
+    '''
+    form = Track()
+
+    if form.validate_on_submit():
+        flash(f' data saved')
+        hoursworked = form.hours.data
+        dateworked = form.datew.data
+        organize = Tracker(hours = hoursworked,datew = dateworked)
+        db.session.add(organize)
+        db.session.commit()
+    current = datetime.now().strftime("%m/%d/%Y")
+    order = Tracker.query.all()
+    return render_template('tracker.html',current = current, form = form, order = order )
+
+@myobj.route("/todo", methods = ['GET', 'POST'])
+@login_required
+def toDo():
+    '''
+        Allows the user to create a Todo list that lets them type what is due,
+        when it is due, and how important that assignment is (priority)
+            Returns:
+                String
+    '''
+    form = ToDo()
+
+    if form.validate_on_submit():
+        flash(f' {form.goal.data} added')
+        goalname = form.goal.data
+        prior = form.prio.data
+        dueDate = form.due_date.data
+        doList = Todo(goal = goalname, prio = prior,due_date = dueDate)
+        db.session.add(doList)
+        db.session.commit()
+        return redirect ("todo")
+
+    orderList = Todo.query.order_by(Todo.prio).all()
+    return render_template('todo.html', form = form, orderList = orderList)
+
+```
+## Code in myapp/workhrs.py
+```python
+class Track(FlaskForm):
+    '''
+        Create form filed for the purpose of tracking hours worked.
+                Parameters:
+                FlaskForm : A form parameter from flask_wtf
+    '''
+    hours = IntegerField("How many hours did you work")
+    datew = DateField("When did you work(m/d/y)",format = '%m/%d/%Y')
+    addH = SubmitField("Save Hours")
+
+```
+## Code in myapp/todoforms.py
+```python
+class ToDo(FlaskForm):
+     '''
+             Create form filed for the purpose of creating a to do list.
+                    Parameters:
+                    FlaskForm : A form parameter from flask_wtf
+     '''
+    goal = StringField(  "What to do            :", validators = [DataRequired()])
+    prio = IntegerField("Priority rank", validators = [DataRequired()])
+    due_date = DateField("When is it due?(m/d/y):", validators = [DataRequired()], format = '%m/%d/%Y')
+    addG = SubmitField("Add to do")
+    delG = SubmitField("Remove item")
+
+
 ```
 ## Code in myapp/deleteforms.py
 ```python
@@ -219,7 +297,37 @@ class Notes(db.Model):
  #Returns a string as a representation of the object.
     def __repr__(self):
         return f'<{self.title}  {self.text} >'
-    
+
+class Todo(db.Model):
+    '''
+    Creates a database to store the name and date
+    for the todo list
+        Parameters:
+            db.Model
+        Returns:
+            String
+    '''
+    id = db.Column(db.Integer, primary_key = True)
+    goal = db.Column(db.String(80))
+    prio = db.Column(db.Integer, index = True)
+    due_date = db.Column(db.DateTime)
+
+    def __ref(self):
+        return f"Todo('{self.goal}', {self.prio})"
+
+class Tracker(db.Model):
+    '''
+    Creates a database to store the number and date
+    to track how many hours they worked
+        Parameters:
+            db.model
+        Returns:
+            Date
+            integer
+    '''
+    id = db.Column(db.Integer, primary_key = True)
+    hours = db.Column(db.Integer)
+    datew = db.Column(db.DateTime)    
 
 ```
 ## Code in myapp/noteforms.py
