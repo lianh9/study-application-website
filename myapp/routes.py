@@ -1,5 +1,7 @@
 
 from os import error
+from re import S
+from flask import escape
 from sqlalchemy.orm import session
 from werkzeug.security import check_password_hash, generate_password_hash
 from myapp import myobj
@@ -7,6 +9,7 @@ from myapp import db
 from myapp.loginforms import LoginForm
 from myapp.deleteforms import DeleteForm
 from myapp.noteforms import NoteForm
+from myapp.searchforms import SearchForm
 from myapp.models import User, Notes
 from myapp.registerforms import RegisterForm
 from flask import render_template, escape, flash, redirect,request
@@ -146,13 +149,23 @@ def add_notes():
 def notes_dashboard():
     '''
     Get current login user's notes information form Notes database
-    and display all the notes in the dashboard page
+    and display all the notes in the dashboard page and provides
+    a search box for user to search their notes by a word
         Returns:
             return html pages
     '''
+    form = SearchForm()
     note_id = None
+    word = ""
     notes = Notes.query.filter_by(user_id=current_user.id)
+    if form.validate_on_submit():
+        word = form.search.data
+        for i in notes:
+            found_test= i.text
+            found_title=i.title
+            if word in found_test:
+                flash('word found in note title : ' +found_title + ', with content : ' + found_test)
+        flash('No word found' )
     for note in notes:
         note_id = note.user_id
-    return render_template('note_dashboard.html',notes=notes,note_id=note_id)
-
+    return render_template('note_dashboard.html',notes=notes,note_id=note_id,form=form,word=word)

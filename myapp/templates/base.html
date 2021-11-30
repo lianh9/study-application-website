@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html> 
-   
+<html>    
     <head>
       <style>
        
@@ -44,7 +43,7 @@
     </div>
   </div>
   </nav>    
-<title>This is my homepage</title>
+<title>Study Hub</title>
     </head>
 
     <body>
@@ -61,6 +60,12 @@
         </ul>
         {% endif %}
         {% endwith %}
+        <link href = "{{url_for('static',filename='css/stylebase.css')}}" rel="stylesheet">
+        <button id="start"><strong>Pomodoro</strong></button>
+
+        <h2>00:00</h2>
+
+        <script src ="{{url_for('static',filename='js/time.js')}}"></script>
         {% block content %}
         {% endblock %}
     </body>

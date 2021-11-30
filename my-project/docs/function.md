@@ -9,7 +9,8 @@ Functions
 [register](http://127.0.0.1:8000/about/)    
 [delete_account](http://127.0.0.1:8000/about/)   
 [add_notes](http://127.0.0.1:8000/about/)   
-[notes_dashboard](http://127.0.0.1:8000/about/)  
+[notes_dashboard](http://127.0.0.1:8000/about/)
+  
 
 ## In myapp/deleteforms.py
 [class DeleteForm](http://127.0.0.1:8000/about/) 
@@ -23,5 +24,9 @@ Functions
 
 ## In myapp/registerform.py
 [class RegisterForm](http://127.0.0.1:8000/about/) 
+## In myapp/searchform.py
+[class SearchForm](http://127.0.0.1:8000/about/) 
 ## myapp/init.py
-[init](http://127.0.0.1:8000/about/) 
+[init](http://127.0.0.1:8000/about/)
+## myapp/static/time.js
+[Pomodoro timer]()
