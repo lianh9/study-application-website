@@ -9,8 +9,8 @@ from myapp import db
 from myapp.loginforms import LoginForm
 from myapp.deleteforms import DeleteForm
 from myapp.noteforms import NoteForm
+from myapp.models import User, Notes, Todo, Tracker, FlashCard
 from myapp.searchforms import SearchForm
-from myapp.models import User, Notes, Todo, Tracker
 from myapp.registerforms import RegisterForm
 from flask import render_template, escape, flash, redirect,request
 from markdown import markdown
@@ -18,6 +18,10 @@ from flask_login import UserMixin,login_user,LoginManager,login_required,logout_
 from myapp.todoforms import ToDo
 from myapp.workhrs import Track
 from datetime import datetime
+import pdfkit
+from werkzeug.utils import secure_filename
+from myapp.GetFile import GetFile
+from myapp.flashcards import FlashCardForm
 
 @myobj.route("/")
 def home():
@@ -218,4 +222,50 @@ def trackhours():
     current = datetime.now().strftime("%m/%d/%Y")
     order = Tracker.query.all()
     return render_template('tracker.html',current = current, form = form, order = order )
+@myobj.route("/cards", methods=['GET', 'POST'])
+@login_required
+def add_card():
+    '''
+    Stores the card information in the card database.
+        Returns:
+            return html pages
+    '''
+    form = FlashCardForm()
+    if form.validate_on_submit():
+        card = FlashCard(title=form.title.data,user_id = current_user.id,content=form.content.data)
+        db.session.add(card)
+        db.session.commit()
+        flash('Card added')
+    return render_template('flashcard.html', form=form)
 
+@myobj.route("/myflashcards", methods=['GET', 'POST'])
+@login_required
+def my_flashcards():
+    '''
+    View all the flashcards of the user
+        Returns:
+            return html pages
+    '''
+    card_id = None
+    cards = FlashCard.query.filter_by(user_id=current_user.id)
+    for card in cards:
+        card_id = card.user_id
+    return render_template('myflashcards.html', cards=cards, card_id=card_id)
+
+@myobj.route("/cardtopdf", methods=['GET', 'POST'])
+@login_required
+def card_to_pdf():
+    '''
+    Convert Card to pdf
+        Returns:
+            return pdf file
+    '''
+    form = GetFile()
+    if form.validate_on_submit():
+        name = secure_filename(form.file.data.name)
+        form.file.data.save('myapp/static/cards/' +name)
+        input_name= 'myapp/static/cards/' +name
+        output_name=input_name.split(".html")[0] + ".pdf"
+        pdfkit.from_file(input_name, output_name)
+        return render_template('cardtopdf.html', form=form, pdf=output_name)
+    return render_template('cardtopdf.html', form=form)
