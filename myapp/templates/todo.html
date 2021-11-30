@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link href = "{{url_for('static',filename='css/form_style.css')}}" rel="stylesheet">
+<br/>
+<br/>
+<div class="mydiv">
+<div class="container center">
 
-<h1> To Do List </h1>
-
+<h3><strong> To Do List</strong> </h3>
+</br></br>
         {% if orderList %}
 	<ol>
 		{% for doList in orderList %}
@@ -16,16 +21,19 @@
 	{{ form.hidden_tag() }}
 	<p>
 		{{form.goal.label}}
-		{{form.goal(size=32)}}
-	</p>
+		{{form.goal(size=50)}}
+	</p></br>
 	<p>
 		{{form.prio.label}}
-		{{form.prio(size=32)}}
+		{{form.prio(size=50)}}
 
-	</p>														        <p>														                {{form.due_date.label}}
+	</p></br>
+	<p> {{form.due_date.label}}
 		{{form.due_date(size=32)}}
-	</p>														        <p>
-		{{form.addG()}}												        </p>
+	</p></br>
+	<p>
+		{{form.addG()}}	 </p>
 </form>
+</div>
 {% endblock %}
 
