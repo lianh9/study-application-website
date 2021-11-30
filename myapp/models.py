@@ -81,3 +81,21 @@ class Tracker(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     hours = db.Column(db.Integer)
     datew = db.Column(db.DateTime)
+
+class FlashCard(db.Model):
+    '''
+    Create database to store flashcard information.
+        Parameters:
+            db.Model
+        Returns:
+            return html pages
+    '''
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(128))
+    content = db.Column(db.String(128))
+    date_added = db.Column(db.DateTime,default=datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable = False)
+
+ #Returns a string as a representation of the object.
+    def __repr__(self):
+        return f'<{self.title}  {self.content} {self.date_added}  >'
