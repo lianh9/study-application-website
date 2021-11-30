@@ -12,6 +12,8 @@ Functions
 [notes_dashboard](http://127.0.0.1:8000/about/)  
 [toDo](http://127.0.0.1:8000/about/)
 [trackhours](http://127.0.0.1:8000/about/)
+[add_flash_card](http://127.0.0.1:8000/about/)
+[flash_card_to_pdf](http://127.0.0.1:8000/about/)
 
 ## In myapp/deleteforms.py
 [class DeleteForm](http://127.0.0.1:8000/about/) 
@@ -25,11 +27,18 @@ Functions
 ## In myapp/todoforms.py
 [class ToDo](http://127.0.0.1:8000/about/)
 
+## In myapp/flashcards.py
+[class FlashCardForm](http://127.0.0.1:8000/about/)
+
+## In myapp/todoforms.py
+[class ToDo](http://127.0.0.1:8000/about/)
+
 ## In myapp/models.py
 [class User](http://127.0.0.1:8000/about/) 
 [class Notes](http://127.0.0.1:8000/about/) 
 [class Todo](http://127.0.0.1:8000/about/)
 [class Tracker](http://127.0.0.1:8000/about/)
+[class Flashcard](http://127.0.0.1:8000/about/)
 
 ## In myapp/registerform.py
 [class RegisterForm](http://127.0.0.1:8000/about/) 
