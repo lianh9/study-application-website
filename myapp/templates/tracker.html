@@ -1,25 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link href = "{{url_for('static',filename='css/form_style.css')}}" rel="stylesheet">
+<br/>
+<br/>
+<div class="mydiv">
+<div class="container center">
+<h3><strong> Track Hours</strong> </h3>
+</br></br>
 
-<h1> Track Hours </h1>
-
-<p>
-        Please choose a date and record how many hours did you worked
-
-</p>
-
+<p> Please choose a date and record how many hours did you worked</p>
+</br>
 
 <form action = "" method = "POST" novalidate>
 	{{ form.hidden_tag() }}
 	<p>
 		{{form.hours.label}}
 		{{form.hours(size=32)}}
-	</p>
+	</p></br>
 	<p>
 		{{form.datew.label}}
 		{{form.datew(size=32)}}											        </p>
-	 <p>
+	 <p></br>
 	                 {{form.addH()}}
 	</p>
 
@@ -31,5 +33,6 @@
 						                {% endfor %}
 								        <ul>
 										        {% endif %}
+										</div>
 
 {% endblock %}

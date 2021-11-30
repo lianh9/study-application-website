@@ -133,15 +133,26 @@ def add_notes():
 def notes_dashboard():
     '''
     Get current login user's notes information form Notes database
-    and display all the notes in the dashboard page
+    and display all the notes in the dashboard page and provides
+    a search box for user to search their notes by a word
         Returns:
             return html pages
     '''
+    form = SearchForm()
     note_id = None
+    word = ""
     notes = Notes.query.filter_by(user_id=current_user.id)
+    if form.validate_on_submit():
+        word = form.search.data
+        for i in notes:
+            found_test= i.text
+            found_title=i.title
+            if word in found_test:
+                flash('word found in note title : ' +found_title + ', with content : ' + found_test)
+        flash('No word found' )
     for note in notes:
         note_id = note.user_id
-    return render_template('note_dashboard.html',notes=notes,note_id=note_id)
+    return render_template('note_dashboard.html',notes=notes,note_id=note_id,form=form,word=word)
 
 
 @myobj.route("/track",methods = ['GET', 'POST'])
@@ -424,6 +435,18 @@ class RegisterForm(FlaskForm):
     register = SubmitField('Sign up')
 
 ```
+## Code in mapp/searchforms.py
+```python
+class SearchForm(FlaskForm):
+    '''
+    Create form filed for the purpose of search word in the page.
+        Parameters:
+            FlaskForm : A form parameter from flask_wtf
+    '''
+    search = StringField('Please enter the word to search notes', validators=[DataRequired()])
+    submit = SubmitField('Search')
+
+```
 ## Code for myapp/init.py
 ```python
 # create Flask class object named myobj
@@ -450,3 +473,91 @@ migrate = Migrate(myobj,db)
 
 
 ```
+## Code for pomodoro timer
+```javascript
+//Finding HTML elements by CSS Selectors h2
+const setTime = document.querySelector('h2')
+//set pomodoro time to 25 min and break time to 5 min
+let pomodoro = 1500;
+let breakTime = 300;
+displayTime(pomodoro);
+// Add a click listener to the pomodoro button, once user clicks
+// The pomodoro timer will start
+const setButton = document.getElementById("start");
+setButton.addEventListener("click",function startPomodoro(){
+    pomodoroTimer(pomodoro);
+});
+/**
+ * Function to set the time interval for the pomodoro timer
+ * and end the pomodoro timer when timer finishes
+ * @param {s} second 
+ */
+function pomodoroTimer(second){
+const timer = setInterval (()=>{
+    pomodoro--;
+    displayTime(pomodoro);
+    if(pomodoro <= 0 || pomodoro < 1){
+        endTimer();
+        breakTimer(breakTime);
+        clearInterval(timer);
+    }
+},1000)
+}
+/**
+ * Function to set the time interval for the break timer
+ * and end the break timer when break timer finishes
+ * @param {s} second 
+ */
+function breakTimer(second){
+    const timer = setInterval (()=>{
+        breakTime--;
+        displayTime(breakTime);
+        if(breakTime <= 0 || breakTime < 1){
+            endBreakTimer();
+            clearInterval(timer);
+        }
+    },1000)
+    }
+/**
+ * Funtion to display time in the format of 00:00
+ * and calculate the minites and second  
+ * @param {*} second 
+ */
+function displayTime(second){
+    const min = Math.floor(second / 60);
+    const sec = Math.floor(second % 60);
+    m=format(min);
+    s=format(sec)
+    setTime.innerHTML = m + ":" + s;
+}
+/**
+ * Function to format the time, when minites or seconds 
+ * are less than 10, add 0 in front of them
+ * @param {*} temp 
+ * @returns temp
+ */
+function format(temp){
+    if (temp < 10){
+        temp = '0'+ temp;
+    }
+    return temp;
+}
+/**
+ * Functions to end the pomodoro timer and display text 
+ * Time for break on the website
+ */
+function endTimer(){
+    setTime.innerHTML='Time for break';
+}
+/**
+ * Functions to end the break timer and display text 
+ * End for break on the website
+ */
+function endBreakTimer(){
+    setTime.innerHTML='End for break';
+}
+
+
+
+```
+

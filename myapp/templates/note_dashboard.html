@@ -3,24 +3,34 @@
 <link href = "{{url_for('static',filename='css/form_style.css')}}" rel="stylesheet">
 <br/>  
 <div class="container">
+    <form action="" method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.search.label }} <br>
+            {{ form.search(size=70) }}
+        </p><br/>
+        
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
 </br>
-    <h4> Notes Dashbord</h4>
+    <h3> Notes Dashbord</h3>
 </br>
 {% if note_id == current_user.id %}
 
     {% for note in notes %}
     <div class = 'shadow p-3 mb-5 bg-body rounded'>
-    {{note.title}}
+    <strong>{{note.title}}</strong>
 </br>
-    {% filter markdown %}
+</br>
+
     {{note.text}}
 </br>
-    {% endfilter %}
+    
     </div>
 </br>
 </p>
-    
-
     {% endfor %}
     {% else %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">

@@ -4,6 +4,8 @@ nav:
     - Home: index.md
     - About: about.md
     - Function: function.md
+    - Reference page : reference.md
+    
    
 theme: readthedocs
 
