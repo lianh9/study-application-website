@@ -3,8 +3,7 @@
 A note taking website, user could experience all the features avaiable by signing up in the website.
 
 
-
-## Fetures
+## Features
 - sign up
 - login 
 - logout
@@ -13,6 +12,8 @@ A note taking website, user could experience all the features avaiable by signin
 - delete account
 - Pomodoro timer
 - Search notes
+- Add flashcards
+- Flashcard to pdf
 
 
 ## Project layout

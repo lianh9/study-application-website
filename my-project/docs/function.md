@@ -9,12 +9,11 @@ Functions
 [register](http://127.0.0.1:8000/about/)    
 [delete_account](http://127.0.0.1:8000/about/)   
 [add_notes](http://127.0.0.1:8000/about/)   
-[notes_dashboard](http://127.0.0.1:8000/about/)
-[toDo](http://127.0.0.1:8000/about/)
-[trackhours](http://127.0.0.1:8000/about/)
-
-[add_flash_card](http://127.0.0.1:8000/about/) 
-[flash_card_to_pdf](http://127.0.0.1:8000/about/)
+[notes_dashboard](http://127.0.0.1:8000/about/)<br />
+[toDo](http://127.0.0.1:8000/about/)<br />
+[trackhours](http://127.0.0.1:8000/about/)<br />
+[add_flash_card](http://127.0.0.1:8000/about/) <br />
+[flash_card_to_pdf](http://127.0.0.1:8000/about/)<br />
 
 ## In myapp/deleteforms.py
 [class DeleteForm](http://127.0.0.1:8000/about/) 

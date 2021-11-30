@@ -170,7 +170,6 @@ def notes_dashboard():
             found_title=i.title
             if word in found_test:
                 flash('word found in note title : ' +found_title + ', with content : ' + found_test)
-        flash('No word found' )
     for note in notes:
         note_id = note.user_id
     return render_template('note_dashboard.html',notes=notes,note_id=note_id,form=form,word=word)
