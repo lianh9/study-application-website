@@ -9,6 +9,6 @@ class FlashCardForm(FlaskForm):
         Parameters:
             FlaskForm : A form parameter from flask_wtf
     '''
-    title = StringField('Title', validators=[DataRequired()])
-    content = StringField('Content', validators=[DataRequired()])
+    title = StringField('Question', validators=[DataRequired()])
+    content = StringField('Answer', validators=[DataRequired()])
     submit = SubmitField('Submit Flash Card')
