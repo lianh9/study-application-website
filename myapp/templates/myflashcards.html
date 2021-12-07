@@ -11,10 +11,13 @@
     {% for card in cards %}
     <div class = 'shadow p-3 mb-5 bg-body rounded'>
     {{card.title}}
+
         </br>
         <button type="button" onclick="myFunction()" class="btn btn-primary" style="margin-top: -25px; margin-left: 450px; margin-bottom: 0px;">
         View Answer
     </button>
+        </br>
+    {{card.id}}
 </br>
     </div>
 </br>
