@@ -13,16 +13,18 @@ from myapp.models import User, Notes, Todo, Tracker, FlashCard
 from myapp.searchforms import SearchForm
 from myapp.registerforms import RegisterForm
 from myapp.share_notes import ShareNoteForm
-from flask import render_template, escape, flash, redirect,request
+from flask import render_template, escape, flash, redirect,request, send_file
 from markdown import markdown
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
 from myapp.todoforms import ToDo
 from myapp.workhrs import Track
 from datetime import datetime
+from io import BytesIO
 import pdfkit
 from werkzeug.utils import secure_filename
 from myapp.GetFile import GetFile
 from myapp.flashcards import FlashCardForm
+from myapp.shareflashcard import ShareCardForm
 
 @myobj.route("/")
 def home():
@@ -303,3 +305,24 @@ def card_to_pdf():
         pdfkit.from_file(input_name, output_name)
         return render_template('cardtopdf.html', form=form, pdf=output_name)
     return render_template('cardtopdf.html', form=form)
+
+@myobj.route("/sharecard", methods=['GET', 'POST'])
+@login_required
+def share_card():
+    '''
+    Shares the card with another user.
+        Returns:
+            return html pages
+    '''
+
+    form = ShareCardForm()
+    if form.validate_on_submit():
+        curr_card = FlashCard.query.filter_by(user_id=current_user.id, id=form.card_id.data).first()
+        curr_user = User.query.filter_by(username=form.share_user_name.data).first()
+        curr_id = curr_user.id
+        card = FlashCard(title=curr_card.title,user_id = curr_id,content=curr_card.content)
+        db.session.add(card)
+        db.session.commit()
+        flash('Card shared')
+    return render_template('shareflashcard.html', form=form)
+
