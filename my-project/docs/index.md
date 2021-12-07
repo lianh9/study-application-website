@@ -16,6 +16,7 @@ A note taking website, user could experience all the features avaiable by signin
 - Flashcard to pdf
 - Todo list
 - Track hour
+- Share notes
 
 
 ## Project layout

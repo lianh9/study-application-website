@@ -155,6 +155,42 @@ def notes_dashboard():
     return render_template('note_dashboard.html',notes=notes,note_id=note_id,form=form,word=word)
 
 
+@myobj.route("/share_note", methods=['GET', 'POST'])
+@login_required
+def share_notes():
+    '''
+    Get current login user's share notes information from Notes database
+    and User database. If the the notes or person user want to share to is
+    not exit, provides 404 page with description. If both notes and the person
+    the user want to share is in the database, share the notes to the person that
+    user entered.
+        Returns:
+            return html pages
+    '''
+    form = ShareNoteForm()
+    if form.validate_on_submit():
+        share_notes_title = str(form.noteSharing.data)
+        receiver_email = form.email.data
+        receiver_email = str(receiver_email)
+        notes = Notes.query.filter_by(title=share_notes_title).first_or_404(description='There is no notes title {} in your account'.format(share_notes_title))
+        receiver = User.query.filter_by(email=receiver_email).first_or_404(description='There is no user with {} in the system, please invite the person to sign up account with us'.format(receiver_email))
+        receiver_id = receiver.id
+        if notes != None and receiver != None:
+            for i in notes:
+                notes_to_share_title = i.title
+                notes_to_share_text = i.text 
+                note = Notes(title=notes_to_share_title,user_id = receiver_id,text=notes_to_share_text)
+                db.session.add(note)
+                db.session.commit()
+                flash('Notes shared sucessfully!')
+        else : 
+            flash('Error, please try agian later')
+
+    return render_template('share_note.html',form=form)
+
+        
+
+
 @myobj.route("/track",methods = ['GET', 'POST'])
 @login_required
 def trackhours():

@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
     notes = db.relationship('Notes',backref='user',lazy = True)
  #Returns a string as a representation of the object.
     def __repr__(self):
-        return f'<{self.username}  {self.email}  {self.password_hash}>'
+        return f'<{self.id} {self.username}  {self.email}  {self.password_hash}>'
    
 @login_manager.user_loader
 def load_user(id):
@@ -37,8 +37,6 @@ class Notes(db.Model):
     Create database to store notes information.
         Parameters:
             db.Model 
-        Returns:
-            return html pages
     '''
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128))
