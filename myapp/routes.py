@@ -296,15 +296,10 @@ def card_to_pdf():
         Returns:
             return pdf file
     '''
-    form = GetFile()
-    if form.validate_on_submit():
-        name = secure_filename(form.file.data.name)
-        form.file.data.save('myapp/static/cards/' +name)
-        input_name= 'myapp/static/cards/' +name
-        output_name=input_name.split(".html")[0] + ".pdf"
-        pdfkit.from_file(input_name, output_name)
-        return render_template('cardtopdf.html', form=form, pdf=output_name)
-    return render_template('cardtopdf.html', form=form)
+
+    file_data = FlashCard.query.filter_by(user_id=current_user.id).first()
+    b = bytes(file_data.content, 'utf-8')
+    return send_file(file_data, attachment_filename = "cards.pdf", as_attachment=True)
 
 @myobj.route("/sharecard", methods=['GET', 'POST'])
 @login_required
