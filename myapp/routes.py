@@ -300,6 +300,8 @@ def card_to_pdf():
     file_data = FlashCard.query.filter_by(user_id=current_user.id).first()
     b = bytes(file_data.content, 'utf-8')
     return send_file(file_data, attachment_filename = "cards.pdf", as_attachment=True)
+    
+
 
 @myobj.route("/sharecard", methods=['GET', 'POST'])
 @login_required
