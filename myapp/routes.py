@@ -25,6 +25,7 @@ from werkzeug.utils import secure_filename
 from myapp.GetFile import GetFile
 from myapp.flashcards import FlashCardForm
 from myapp.shareflashcard import ShareCardForm
+from myapp.sharenote import ShareNoteForm
 
 @myobj.route("/")
 def home():
@@ -326,3 +327,20 @@ def share_card():
         flash('Card shared')
     return render_template('shareflashcard.html', form=form)
 
+def share_note():
+    '''
+    Shares the note with another user.
+        Returns:
+            return html pages
+    '''
+
+    form = ShareNoteForm()
+    if form.validate_on_submit():
+        curr_note = Notes.query.filter_by(user_id=current_user.id, id=form.note_id.data).first()
+        curr_user = User.query.filter_by(username=form.share_user_name.data).first()
+        curr_id = curr_user.id
+        note = Notes(title=curr_note.title,user_id = curr_id,text=curr_note.text)
+        db.session.add(note)
+        db.session.commit()
+        flash('Note shared')
+    return render_template('sharenote.html', form=form)
