@@ -12,12 +12,13 @@ from myapp.noteforms import NoteForm
 from myapp.models import User, Notes, Todo, Tracker, FlashCard
 from myapp.searchforms import SearchForm
 from myapp.registerforms import RegisterForm
-from flask import render_template, escape, flash, redirect,request
+from flask import render_template, escape, flash, redirect,request, send_file
 from markdown import markdown
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
 from myapp.todoforms import ToDo
 from myapp.workhrs import Track
 from datetime import datetime
+from io import BytesIO
 import pdfkit
 from werkzeug.utils import secure_filename
 from myapp.GetFile import GetFile
@@ -260,6 +261,12 @@ def card_to_pdf():
         Returns:
             return pdf file
     '''
+
+
+    file_data = FlashCard.query.filter_by(user_id=current_user.id).first()
+    b = bytes(file_data.content, 'utf-8')
+    return send_file(file_data, attachment_filename = "cards.pdf", as_attachment=True)
+
     form = GetFile()
     if form.validate_on_submit():
         name = secure_filename(form.file.data.name)
@@ -289,3 +296,4 @@ def share_card():
         db.session.commit()
         flash('Card shared')
     return render_template('shareflashcard.html', form=form)
+
