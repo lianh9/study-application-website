@@ -30,7 +30,7 @@ from myapp.shareflashcard import ShareCardForm
 def home():
     """Return home page 
     """
-    return render_template("home.html")
+    return render_template("index.html")
 
 @myobj.route("/home")
 def study():
