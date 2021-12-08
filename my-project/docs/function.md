@@ -16,6 +16,7 @@ Functions
 [trackhours](http://127.0.0.1:8000/about/)<br />
 [add_flash_card](http://127.0.0.1:8000/about/) <br />
 [flash_card_to_pdf](http://127.0.0.1:8000/about/)<br />
+[share_card](http://127.0.0.1:8000/about/)<br />
 
 ## In myapp/deleteforms.py
 [class DeleteForm](http://127.0.0.1:8000/about/) 

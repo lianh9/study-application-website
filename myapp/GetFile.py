@@ -12,4 +12,4 @@ get the file
 
 
 class GetFile(FlaskForm):
-    file = FileField();
+    file = FileField()

@@ -198,13 +198,13 @@ def share_notes():
         receiver = User.query.filter_by(email=receiver_email).first_or_404(description='There is no user with {} in the system, please invite the person to sign up account with us'.format(receiver_email))
         receiver_id = receiver.id
         if notes != None and receiver != None:
-            for i in notes:
-                notes_to_share_title = i.title
-                notes_to_share_text = i.text 
-                note = Notes(title=notes_to_share_title,user_id = receiver_id,text=notes_to_share_text)
-                db.session.add(note)
-                db.session.commit()
-                flash('Notes shared sucessfully!')
+            #for i in notes:
+            notes_to_share_title = notes.title
+            notes_to_share_text = notes.text 
+            note = Notes(title=notes_to_share_title,user_id = receiver_id,text=notes_to_share_text)
+            db.session.add(note)
+            db.session.commit()
+            flash('Notes shared sucessfully!')
         else : 
             flash('Error, please try agian later')
 
